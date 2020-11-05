@@ -1,7 +1,20 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Moon/Moon.tscn" type="PackedScene" id=1]
+
+[sub_resource type="Environment" id=1]
+glow_enabled = true
 
 [node name="World" type="Node2D"]
 
 [node name="Moon" parent="." instance=ExtResource( 1 )]
+camera = NodePath("../Camera2D")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Moon"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )

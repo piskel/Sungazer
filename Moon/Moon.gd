@@ -11,7 +11,8 @@ const ATTACK_WIDTH = 100
 const DASH_INPUT = "ui_right_click"
 const ATTACK_INPUT = "ui_left_click"
 
-
+# TODO: This seems ugly, should research if there's a cleaner way to do this
+export (NodePath) var camera
 
 enum {
 	IDLE,
@@ -31,7 +32,6 @@ var dash_vector = Vector2.ZERO
 var screen_center = Vector2.ZERO
 
 
-onready var collision_polygon2d = $CollisionPolygon2D
 onready var line2d = $Line2D
 
 onready var hurtbox = $Hurtbox
@@ -45,6 +45,8 @@ onready var attack_timer = $AttackTimer
 func _ready():
 	
 	# Initialize the hurtbox shape
+	# TODO: Would be better if we skewed the hurtbox_dash depending on the angle
+	# of the dash
 	hurtbox_dash_collision.polygon[0] = Vector2(0, -ATTACK_WIDTH)
 	hurtbox_dash_collision.polygon[1] = Vector2(0, ATTACK_WIDTH)
 	hurtbox_dash_collision.polygon[2] = Vector2(0, ATTACK_WIDTH)
@@ -68,11 +70,16 @@ func _physics_process(delta):
 			if Input.is_action_just_pressed(DASH_INPUT):
 				state = CHARGING
 				
-				# TODO: Might be better to call this only when the window is resized
-				screen_center = get_viewport_rect().size/2
+				# Defines the center of the screen depending on the camera
+				# position in the world
+				# TODO: maybe change the name of the variable
+				# TODO: Poses issue when we use the drag margins with the camera
+				screen_center = get_node(camera).global_position
+				
+				print(screen_center)
 				# We recenter the mouse cursor at the center of the screen
 				# so we have as much range as possible for dashing
-				get_viewport().warp_mouse(screen_center)
+				get_viewport().warp_mouse(get_viewport_rect().size/2)
 			
 			if Input.is_action_just_pressed(ATTACK_INPUT):
 				line2d.visible = false
@@ -105,8 +112,9 @@ func _physics_process(delta):
 
 func charge():
 	# Defining the vector of the dash
+	# TODO: Study if the "slingshot" mechanic is better than the "point" mechanic
 	dash_vector = screen_center - get_global_mouse_position()
-	
+	#line2d.points[0] = screen_center
 	line2d.points[1] = dash_vector
 	line2d.visible = true
 
@@ -131,8 +139,11 @@ func dash():
 	
 	dash_timer.start()
 	
-	
+
+# TODO: Adding a cooldown !
 func attack():
+	# TODO: Maybe change the hurtbox shape. It doesn't really make sense for it
+	# to be a circle
 	hurtbox_attack_collision.disabled = false
 	hurtbox_attack_collision.visible = true
 	attack_timer.start()
@@ -159,8 +170,6 @@ func _on_DashTimer_timeout():
 	if attack_timer.is_stopped():
 		hurtbox_attack_collision.disabled = true
 		hurtbox_attack_collision.visible = false
-	
-	
 
 
 func _on_AttackTimer_timeout():
