@@ -40,6 +40,9 @@ onready var hurtbox_attack_collision = $Hurtbox/AttackCollision
 onready var dash_timer = $DashTimer
 onready var attack_timer = $AttackTimer
 
+onready var animation_tree = $AnimationTree
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -52,6 +55,7 @@ func _ready():
 	hurtbox_dash_collision.polygon[2] = Vector2(0, ATTACK_WIDTH)
 	hurtbox_dash_collision.polygon[3] = Vector2(0, -ATTACK_WIDTH)
 	
+	animation_tree.active = true;
 	
 	
 
@@ -60,7 +64,8 @@ func _physics_process(delta):
 	input_vector.x = Input.get_action_strength("ui_right")-Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down")-Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
-
+	
+	animation_tree.set("parameters/Idle/blend_position", input_vector)
 	
 	# Finite state machine
 	match state:
