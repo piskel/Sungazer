@@ -1,35 +1,11 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=32 format=2]
 
-[ext_resource path="res://Assets/Sprites/Moon/moon_idle_cape.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Sprites/Moon/moon-spritesheet-body.png" type="Texture" id=1]
 [ext_resource path="res://Moon/Moon.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Sprites/Moon/moon_idle_body.png" type="Texture" id=3]
-[ext_resource path="res://Assets/Sprites/Moon/moon_idle_crown.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Sprites/Moon/moon-spritesheet-cape.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Sprites/Moon/moon-spritesheet-crown.png" type="Texture" id=4]
 
 [sub_resource type="Shader" id=1]
-code = "shader_type canvas_item;
-
-
-float rand(vec2 co){
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
-
-void fragment()
-{
-	float y_def = (pow(UV.y-0.2, 2)*sin(TIME*3.0)*cos(pow(UV.y, 2)+TIME*0.5)*5.0 * cos(pow(UV.y, 2)+TIME*2.0))/400.0;
-	vec2 uv_def = vec2(UV.x + y_def, UV.y);
-	vec4 col = texture(TEXTURE, uv_def);
-	float var = rand(UV*cos(TIME/100.0))/5.0;
-	col += vec4(var, var, var, 0.0);
-	COLOR = col;
-}
-
-"
-
-[sub_resource type="ShaderMaterial" id=2]
-shader = SubResource( 1 )
-
-[sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;
 
 float rand(vec2 co){
@@ -49,6 +25,30 @@ void fragment()
 
 "
 
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+/*
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+*/
+
+void fragment()
+{
+	float y_def = (pow(UV.y-0.2, 2)*sin(TIME*3.0)*cos(pow(UV.y, 2)+TIME*0.5)*5.0 * cos(pow(UV.y, 2)+TIME*2.0))/600.0;
+	vec2 uv_def = vec2(UV.x + y_def, UV.y);
+	vec4 col = texture(TEXTURE, uv_def);
+	//float var = rand(UV*cos(TIME/100.0))/5.0;
+	//col += vec4(var, var, var, 0.0);
+	COLOR = col;
+}
+
+"
+
 [sub_resource type="ShaderMaterial" id=4]
 shader = SubResource( 3 )
 
@@ -58,7 +58,7 @@ radius = 100.0
 [sub_resource type="Animation" id=6]
 resource_name = "IdleBottom"
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -70,22 +70,34 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=15]
-resource_name = "IdleBottomLeft"
+[sub_resource type="Animation" id=7]
+resource_name = "IdleLeft"
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -94,10 +106,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 7 ]
+"values": [ 3 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -106,13 +118,64 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 7 ]
+"values": [ 3 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 3 ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "IdleRight"
+tracks/0/type = "value"
+tracks/0/path = NodePath("MoonCape:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("MoonCrown:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=9]
-resource_name = "IdleBottomRight"
+resource_name = "IdleTop"
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -121,10 +184,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 1 ]
+"values": [ 2 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -133,194 +196,248 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 1 ]
+"values": [ 2 ]
 }
-
-[sub_resource type="Animation" id=13]
-resource_name = "IdleLeft"
-tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 6 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ 6 ]
+"values": [ 2 ]
 }
 
 [sub_resource type="Animation" id=10]
-resource_name = "IdleRight"
+resource_name = "RunBottom"
+length = 0.6
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 4, 5, 6, 7, 8, 9 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 4, 5, 6, 7, 8, 9 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 5, 6, 7, 8, 9 ]
 }
 
-[sub_resource type="Animation" id=12]
-resource_name = "IdleTop"
+[sub_resource type="Animation" id=20]
+resource_name = "RunLeft"
+length = 0.6
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 4 ]
+"values": [ 22, 23, 24, 25, 26, 27 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 4 ]
+"values": [ 22, 23, 24, 25, 26, 27 ]
 }
-
-[sub_resource type="Animation" id=14]
-resource_name = "IdleTopLeft"
-tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 5 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ 5 ]
+"values": [ 22, 23, 24, 25, 26, 27 ]
 }
 
 [sub_resource type="Animation" id=11]
-resource_name = "IdleTopRight"
+resource_name = "RunRight"
+length = 0.6
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("MoonBody:frame")
+tracks/0/path = NodePath("MoonCape:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 3 ]
+"values": [ 10, 11, 12, 13, 14, 15 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCape:frame")
+tracks/1/path = NodePath("MoonCrown:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 3 ]
+"values": [ 10, 11, 12, 13, 14, 15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 11, 12, 13, 14, 15 ]
 }
 
-[sub_resource type="AnimationNodeAnimation" id=16]
+[sub_resource type="Animation" id=12]
+resource_name = "RunTop"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("MoonCape:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 16, 17, 18, 19, 20, 21 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("MoonCrown:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 16, 17, 18, 19, 20, 21 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 16, 17, 18, 19, 20, 21 ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=13]
 animation = "IdleTop"
 
-[sub_resource type="AnimationNodeAnimation" id=17]
+[sub_resource type="AnimationNodeAnimation" id=14]
 animation = "IdleLeft"
 
-[sub_resource type="AnimationNodeAnimation" id=18]
+[sub_resource type="AnimationNodeAnimation" id=15]
 animation = "IdleBottom"
 
-[sub_resource type="AnimationNodeAnimation" id=19]
+[sub_resource type="AnimationNodeAnimation" id=16]
 animation = "IdleRight"
 
-[sub_resource type="AnimationNodeAnimation" id=21]
-animation = "IdleBottomLeft"
-
-[sub_resource type="AnimationNodeAnimation" id=22]
-animation = "IdleBottomRight"
-
-[sub_resource type="AnimationNodeAnimation" id=23]
-animation = "IdleTopRight"
-
-[sub_resource type="AnimationNodeAnimation" id=24]
-animation = "IdleTopLeft"
-
-[sub_resource type="AnimationNodeBlendSpace2D" id=20]
-blend_point_0/node = SubResource( 16 )
+[sub_resource type="AnimationNodeBlendSpace2D" id=17]
+blend_point_0/node = SubResource( 13 )
 blend_point_0/pos = Vector2( 0, -1 )
-blend_point_1/node = SubResource( 17 )
-blend_point_1/pos = Vector2( -1, 0 )
-blend_point_2/node = SubResource( 18 )
+blend_point_1/node = SubResource( 14 )
+blend_point_1/pos = Vector2( -1.1, 0 )
+blend_point_2/node = SubResource( 15 )
 blend_point_2/pos = Vector2( 0, 1 )
-blend_point_3/node = SubResource( 19 )
-blend_point_3/pos = Vector2( 1, 0 )
-blend_point_4/node = SubResource( 21 )
-blend_point_4/pos = Vector2( -0.5, 0.5 )
-blend_point_5/node = SubResource( 22 )
-blend_point_5/pos = Vector2( 0.5, 0.5 )
-blend_point_6/node = SubResource( 23 )
-blend_point_6/pos = Vector2( 0.5, -0.5 )
-blend_point_7/node = SubResource( 24 )
-blend_point_7/pos = Vector2( -0.5, -0.5 )
+blend_point_3/node = SubResource( 16 )
+blend_point_3/pos = Vector2( 1.1, 0 )
+min_space = Vector2( -1.5, -1.5 )
+max_space = Vector2( 1.5, 1.5 )
 blend_mode = 1
 
-[sub_resource type="AnimationNodeStateMachine" id=7]
-states/Idle/node = SubResource( 20 )
+[sub_resource type="AnimationNodeAnimation" id=21]
+animation = "RunBottom"
+
+[sub_resource type="AnimationNodeAnimation" id=23]
+animation = "RunTop"
+
+[sub_resource type="AnimationNodeAnimation" id=24]
+animation = "RunRight"
+
+[sub_resource type="AnimationNodeAnimation" id=28]
+animation = "RunLeft"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id=25]
+blend_point_0/node = SubResource( 21 )
+blend_point_0/pos = Vector2( 0, 1 )
+blend_point_1/node = SubResource( 23 )
+blend_point_1/pos = Vector2( 0, -1 )
+blend_point_2/node = SubResource( 24 )
+blend_point_2/pos = Vector2( 1.1, 0 )
+blend_point_3/node = SubResource( 28 )
+blend_point_3/pos = Vector2( -1.1, 0 )
+min_space = Vector2( -1.2, -1.2 )
+max_space = Vector2( 1.2, 1.2 )
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+
+[sub_resource type="AnimationNodeStateMachine" id=18]
+states/Idle/node = SubResource( 17 )
 states/Idle/position = Vector2( -4, 47 )
+states/Run/node = SubResource( 25 )
+states/Run/position = Vector2( -4, 170 )
+transitions = [ "Idle", "Run", SubResource( 26 ), "Run", "Idle", SubResource( 27 ) ]
 start_node = "Idle"
 graph_offset = Vector2( -356, -112 )
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=8]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=19]
 
 [node name="Moon" type="KinematicBody2D"]
 script = ExtResource( 2 )
@@ -328,22 +445,23 @@ __meta__ = {
 "_edit_group_": true
 }
 
+[node name="MoonCrown" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 4 )
+hframes = 28
+frame = 27
+
 [node name="MoonBody" type="Sprite" parent="."]
-texture = ExtResource( 3 )
-hframes = 8
-frame = 1
+texture = ExtResource( 1 )
+hframes = 28
+frame = 27
 
 [node name="MoonCape" type="Sprite" parent="."]
-material = SubResource( 2 )
-texture = ExtResource( 1 )
-hframes = 8
-frame = 1
-region_rect = Rect2( 267, 72, 0, 1 )
-
-[node name="MoonCrown" type="Sprite" parent="."]
 material = SubResource( 4 )
-texture = ExtResource( 4 )
-hframes = 8
+texture = ExtResource( 3 )
+hframes = 28
+frame = 27
+region_rect = Rect2( 267, 72, 0, 1 )
 
 [node name="Line2D" type="Line2D" parent="."]
 visible = false
@@ -371,20 +489,21 @@ one_shot = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/IdleBottom = SubResource( 6 )
-anims/IdleBottomLeft = SubResource( 15 )
-anims/IdleBottomRight = SubResource( 9 )
-anims/IdleLeft = SubResource( 13 )
-anims/IdleRight = SubResource( 10 )
-anims/IdleTop = SubResource( 12 )
-anims/IdleTopLeft = SubResource( 14 )
-anims/IdleTopRight = SubResource( 11 )
+anims/IdleLeft = SubResource( 7 )
+anims/IdleRight = SubResource( 8 )
+anims/IdleTop = SubResource( 9 )
+anims/RunBottom = SubResource( 10 )
+anims/RunLeft = SubResource( 20 )
+anims/RunRight = SubResource( 11 )
+anims/RunTop = SubResource( 12 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 7 )
+tree_root = SubResource( 18 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 8 )
-parameters/Idle/blend_position = Vector2( 0.0626704, 0.540897 )
+parameters/playback = SubResource( 19 )
+parameters/Idle/blend_position = Vector2( -0.0633188, 0.861486 )
+parameters/Run/blend_position = Vector2( -0.0052402, 1.10451 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false

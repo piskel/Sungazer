@@ -25,6 +25,7 @@ var state = MOVING
 
 var input_vector = Vector2.ZERO
 var movement_vector = Vector2.ZERO
+var last_input_vector = Vector2.DOWN
 
 
 var dash_vector = Vector2.ZERO
@@ -41,7 +42,7 @@ onready var dash_timer = $DashTimer
 onready var attack_timer = $AttackTimer
 
 onready var animation_tree = $AnimationTree
-
+onready var animation_state = animation_tree.get("parameters/playback")
 
 
 # Called when the node enters the scene tree for the first time.
@@ -65,12 +66,22 @@ func _physics_process(delta):
 	input_vector.y = Input.get_action_strength("ui_down")-Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
 	
-	animation_tree.set("parameters/Idle/blend_position", input_vector)
+	if input_vector != Vector2.ZERO:
+		last_input_vector = input_vector
+	
 	
 	# Finite state machine
 	match state:
 		MOVING:
 			move()
+			
+			if input_vector != Vector2.ZERO:
+				animation_state.travel("Run")
+				animation_tree.set("parameters/Run/blend_position", last_input_vector)
+			else:
+				animation_state.travel("Idle")
+				animation_tree.set("parameters/Idle/blend_position", last_input_vector)
+			
 			# Charging for dash while moving
 			if Input.is_action_just_pressed(DASH_INPUT):
 				state = CHARGING
@@ -85,6 +96,7 @@ func _physics_process(delta):
 				# We recenter the mouse cursor at the center of the screen
 				# so we have as much range as possible for dashing
 				get_viewport().warp_mouse(get_viewport_rect().size/2)
+				
 			
 			if Input.is_action_just_pressed(ATTACK_INPUT):
 				line2d.visible = false
