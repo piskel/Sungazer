@@ -252,7 +252,7 @@ tracks/2/keys = {
 "values": [ 4, 5, 6, 7, 8, 9 ]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id=11]
 resource_name = "RunLeft"
 length = 0.6
 loop = true
@@ -293,49 +293,47 @@ tracks/2/keys = {
 "values": [ 22, 23, 24, 25, 26, 27 ]
 }
 
-[sub_resource type="Animation" id=11]
-resource_name = "RunRight"
-length = 0.6
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath("MoonCape:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 10, 11, 12, 13, 14, 15 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("MoonCrown:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 10, 11, 12, 13, 14, 15 ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("MoonBody:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 10, 11, 12, 13, 14, 15 ]
-}
-
 [sub_resource type="Animation" id=12]
-resource_name = "RunTop"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("MoonCape:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 11, 12, 13, 14, 15 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("MoonCrown:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 11, 12, 13, 14, 15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MoonBody:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 11, 12, 13, 14, 15 ]
+}
+
+[sub_resource type="Animation" id=13]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -374,70 +372,70 @@ tracks/2/keys = {
 "update": 1,
 "values": [ 16, 17, 18, 19, 20, 21 ]
 }
-
-[sub_resource type="AnimationNodeAnimation" id=13]
-animation = "IdleTop"
 
 [sub_resource type="AnimationNodeAnimation" id=14]
-animation = "IdleLeft"
+animation = "IdleTop"
 
 [sub_resource type="AnimationNodeAnimation" id=15]
-animation = "IdleBottom"
+animation = "IdleLeft"
 
 [sub_resource type="AnimationNodeAnimation" id=16]
+animation = "IdleBottom"
+
+[sub_resource type="AnimationNodeAnimation" id=17]
 animation = "IdleRight"
 
-[sub_resource type="AnimationNodeBlendSpace2D" id=17]
-blend_point_0/node = SubResource( 13 )
+[sub_resource type="AnimationNodeBlendSpace2D" id=18]
+blend_point_0/node = SubResource( 14 )
 blend_point_0/pos = Vector2( 0, -1 )
-blend_point_1/node = SubResource( 14 )
+blend_point_1/node = SubResource( 15 )
 blend_point_1/pos = Vector2( -1.1, 0 )
-blend_point_2/node = SubResource( 15 )
+blend_point_2/node = SubResource( 16 )
 blend_point_2/pos = Vector2( 0, 1 )
-blend_point_3/node = SubResource( 16 )
+blend_point_3/node = SubResource( 17 )
 blend_point_3/pos = Vector2( 1.1, 0 )
 min_space = Vector2( -1.5, -1.5 )
 max_space = Vector2( 1.5, 1.5 )
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id=21]
+[sub_resource type="AnimationNodeAnimation" id=19]
 animation = "RunBottom"
 
-[sub_resource type="AnimationNodeAnimation" id=23]
+[sub_resource type="AnimationNodeAnimation" id=20]
 animation = "RunTop"
 
-[sub_resource type="AnimationNodeAnimation" id=24]
+[sub_resource type="AnimationNodeAnimation" id=21]
 animation = "RunRight"
 
-[sub_resource type="AnimationNodeAnimation" id=28]
+[sub_resource type="AnimationNodeAnimation" id=22]
 animation = "RunLeft"
 
-[sub_resource type="AnimationNodeBlendSpace2D" id=25]
-blend_point_0/node = SubResource( 21 )
+[sub_resource type="AnimationNodeBlendSpace2D" id=23]
+blend_point_0/node = SubResource( 19 )
 blend_point_0/pos = Vector2( 0, 1 )
-blend_point_1/node = SubResource( 23 )
+blend_point_1/node = SubResource( 20 )
 blend_point_1/pos = Vector2( 0, -1 )
-blend_point_2/node = SubResource( 24 )
+blend_point_2/node = SubResource( 21 )
 blend_point_2/pos = Vector2( 1.1, 0 )
-blend_point_3/node = SubResource( 28 )
+blend_point_3/node = SubResource( 22 )
 blend_point_3/pos = Vector2( -1.1, 0 )
 min_space = Vector2( -1.2, -1.2 )
 max_space = Vector2( 1.2, 1.2 )
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+[sub_resource type="AnimationNodeStateMachineTransition" id=24]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+[sub_resource type="AnimationNodeStateMachineTransition" id=25]
 
-[sub_resource type="AnimationNodeStateMachine" id=18]
-states/Idle/node = SubResource( 17 )
+[sub_resource type="AnimationNodeStateMachine" id=26]
+states/Idle/node = SubResource( 18 )
 states/Idle/position = Vector2( -4, 47 )
-states/Run/node = SubResource( 25 )
+states/Run/node = SubResource( 23 )
 states/Run/position = Vector2( -4, 170 )
-transitions = [ "Idle", "Run", SubResource( 26 ), "Run", "Idle", SubResource( 27 ) ]
+transitions = [ "Idle", "Run", SubResource( 24 ), "Run", "Idle", SubResource( 25 ) ]
 start_node = "Idle"
 graph_offset = Vector2( -356, -112 )
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=19]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=27]
 
 [node name="Moon" type="KinematicBody2D"]
 script = ExtResource( 2 )
@@ -449,18 +447,15 @@ __meta__ = {
 material = SubResource( 2 )
 texture = ExtResource( 4 )
 hframes = 28
-frame = 27
 
 [node name="MoonBody" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 hframes = 28
-frame = 27
 
 [node name="MoonCape" type="Sprite" parent="."]
 material = SubResource( 4 )
 texture = ExtResource( 3 )
 hframes = 28
-frame = 27
 region_rect = Rect2( 267, 72, 0, 1 )
 
 [node name="Line2D" type="Line2D" parent="."]
@@ -493,15 +488,15 @@ anims/IdleLeft = SubResource( 7 )
 anims/IdleRight = SubResource( 8 )
 anims/IdleTop = SubResource( 9 )
 anims/RunBottom = SubResource( 10 )
-anims/RunLeft = SubResource( 20 )
-anims/RunRight = SubResource( 11 )
-anims/RunTop = SubResource( 12 )
+anims/RunLeft = SubResource( 11 )
+anims/RunRight = SubResource( 12 )
+anims/RunTop = SubResource( 13 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 18 )
+tree_root = SubResource( 26 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 19 )
+parameters/playback = SubResource( 27 )
 parameters/Idle/blend_position = Vector2( -0.0633188, 0.861486 )
 parameters/Run/blend_position = Vector2( -0.0052402, 1.10451 )
 

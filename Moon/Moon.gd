@@ -105,6 +105,12 @@ func _physics_process(delta):
 		CHARGING:
 			move() # Ability to move while charging
 			charge()
+			
+			if input_vector != Vector2.ZERO:
+				animation_state.travel("Run")
+				animation_tree.set("parameters/Run/blend_position", last_input_vector)
+			
+			
 			# Release dash
 			if Input.is_action_just_released(DASH_INPUT):
 				line2d.visible = false
@@ -130,7 +136,7 @@ func _physics_process(delta):
 func charge():
 	# Defining the vector of the dash
 	# TODO: Study if the "slingshot" mechanic is better than the "point" mechanic
-	dash_vector = screen_center - get_global_mouse_position()
+	dash_vector = get_node(camera).global_position - get_global_mouse_position()
 	#line2d.points[0] = screen_center
 	line2d.points[1] = dash_vector
 	line2d.visible = true
