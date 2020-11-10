@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const DEFAULT_SPEED = 500.0
+const DEFAULT_SPEED = 300.0
 #const DEFAULT_DASH_SPEED = 1.0
 const Y_AXIS_SPEED = 0.75
 const RUN_SPEED = 1.5
@@ -25,6 +25,7 @@ var state = MOVING
 
 var input_vector = Vector2.ZERO
 var movement_vector = Vector2.ZERO
+# The input_vector of the previous cycle
 var last_input_vector = Vector2.DOWN
 
 
@@ -75,9 +76,10 @@ func _physics_process(delta):
 		MOVING:
 			move()
 			
+			# Sets the sprite orientation depending on the previous input_vector
 			if input_vector != Vector2.ZERO:
 				animation_state.travel("Run")
-				animation_tree.set("parameters/Run/blend_position", last_input_vector)
+				animation_tree.set("parameters/Run/blend_position", input_vector)
 			else:
 				animation_state.travel("Idle")
 				animation_tree.set("parameters/Idle/blend_position", last_input_vector)
@@ -89,7 +91,6 @@ func _physics_process(delta):
 				# Defines the center of the screen depending on the camera
 				# position in the world
 				# TODO: maybe change the name of the variable
-				# TODO: Poses issue when we use the drag margins with the camera
 				screen_center = get_node(camera).global_position
 				
 				print(screen_center)
@@ -103,17 +104,25 @@ func _physics_process(delta):
 				state = ATTACKING
 			
 		CHARGING:
-			move() # Ability to move while charging
+			# Ability to move while charging
+			move()
 			charge()
+				
 			
 			if input_vector != Vector2.ZERO:
 				animation_state.travel("Run")
 				animation_tree.set("parameters/Run/blend_position", last_input_vector)
+			else:
+				animation_state.travel("Idle")
+				animation_tree.set("parameters/Idle/blend_position", dash_vector)
 			
 			
 			# Release dash
 			if Input.is_action_just_released(DASH_INPUT):
 				line2d.visible = false
+				
+				# Makes sure the player faces the direction of the dash vector
+				last_input_vector = dash_vector
 				state = DASHING
 			
 			# Cancel charging with attack
@@ -123,6 +132,7 @@ func _physics_process(delta):
 			
 		DASHING:
 			dash()
+			
 			# Cancel dash with attack
 			if Input.is_action_just_pressed(ATTACK_INPUT):
 				state = ATTACKING
@@ -133,8 +143,11 @@ func _physics_process(delta):
 			attack()
 			state = MOVING
 
+
 func charge():
 	# Defining the vector of the dash
+	# TODO: Check why the dash vector changes when the player moves within
+	#		the camera's drag margin
 	# TODO: Study if the "slingshot" mechanic is better than the "point" mechanic
 	dash_vector = get_node(camera).global_position - get_global_mouse_position()
 	#line2d.points[0] = screen_center
@@ -143,7 +156,10 @@ func charge():
 
 
 func dash():
-	# Moves the player the the new position
+	
+	# TODO: Maybe use a transition rather than instantly moving the player
+	#		on screen.
+	# Moves the player to the the new position
 	global_position += dash_vector
 	
 	
@@ -177,15 +193,15 @@ func move():
 	movement_vector = DEFAULT_SPEED * input_vector
 	
 	# Is running really necessary ?
-	if Input.is_action_pressed("ui_shift"):
-		movement_vector *= RUN_SPEED
+	#if Input.is_action_pressed("ui_shift"):
+	#	movement_vector *= RUN_SPEED
 	
 	movement_vector.y *= Y_AXIS_SPEED
 	
 	move_and_slide(movement_vector, Vector2.ZERO)
 
 
-# When the dash_timer is done hurtbox should be disabled
+# When the dash_timer is done, hurtbox_dash and hurtbox_attack are disabled
 func _on_DashTimer_timeout():
 	hurtbox_dash_collision.disabled = true
 	hurtbox_dash_collision.visible = false
@@ -195,6 +211,7 @@ func _on_DashTimer_timeout():
 		hurtbox_attack_collision.visible = false
 
 
+# When the attack_timer is done, hurtbox is disabled
 func _on_AttackTimer_timeout():
 	hurtbox_attack_collision.disabled = true
 	hurtbox_attack_collision.visible = false
