@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+
 const DEFAULT_SPEED = 200.0
 #const DEFAULT_DASH_SPEED = 1.0
 const Y_AXIS_SPEED = 0.75
@@ -11,9 +12,11 @@ const ATTACK_WIDTH = 50
 const DASH_INPUT = "ui_right_click"
 const ATTACK_INPUT = "ui_left_click"
 
+
 # TODO: This seems ugly, should research if there's a cleaner way to do this
 export (NodePath) var camera
 
+# Enum for the finite state machine
 enum {
 	MOVING,
 	CHARGING,
@@ -31,6 +34,9 @@ var last_input_vector = Vector2.DOWN
 var dash_vector = Vector2.ZERO
 
 var screen_center = Vector2.ZERO
+
+# The position of the player at the start of the dash
+var dash_init_global_pos = Vector2.ZERO
 
 
 onready var line2d = $Line2D
@@ -97,7 +103,6 @@ func _physics_process(delta):
 				# TODO: maybe change the name of the variable
 				screen_center = get_node(camera).global_position
 				
-				print(screen_center)
 				# We recenter the mouse cursor at the center of the screen
 				# so we have as much range as possible for dashing
 				get_viewport().warp_mouse(get_viewport_rect().size/2)
@@ -126,6 +131,7 @@ func _physics_process(delta):
 				
 				# Makes sure the player faces the direction of the dash vector
 				last_input_vector = dash_vector
+				dash_init_global_pos = global_position
 				dash_timer.start()
 				state = DASHING
 			
@@ -143,7 +149,11 @@ func _physics_process(delta):
 				if dash_timer.is_stopped():
 					state = MOVING
 			else:
-				dash()
+				# Show the running animation when we dash
+				# TODO: Should create a dash animation (and shaders ?)
+				animation_state.travel("Run")
+				animation_tree.set("parameters/Run/blend_position", dash_vector)
+				dash(delta)
 			
 		
 		ATTACKING:
@@ -162,17 +172,20 @@ func charge():
 	line2d.visible = true
 
 
-func dash():
+func dash(delta):
+	
+	# Dash completion from 0.0 to 1.0
+	var dash_progression = 1-dash_timer.time_left/dash_timer.wait_time
 	
 	# Moves the player to the the new position
-	# TODO: Move that magic number somewhere
-	# TODO: Is there a cleaner way to do this ????
-	global_position += dash_vector/10
+	global_position = dash_init_global_pos+dash_vector*dash_progression
 	
+	# Sets the length of the dash hurtbox
+	var hurtbox_dash_length = dash_vector.length()*dash_progression
 	
 	# Sets the hurtbox shape and position
-	hurtbox_dash_collision.polygon[0].x = -dash_vector.length()
-	hurtbox_dash_collision.polygon[1].x = -dash_vector.length()
+	hurtbox_dash_collision.polygon[0].x = -hurtbox_dash_length
+	hurtbox_dash_collision.polygon[1].x = -hurtbox_dash_length
 	
 	# Rotate the collision shape so it matches the player's trajectory
 	hurtbox_dash_collision.rotation = dash_vector.angle()
@@ -193,7 +206,7 @@ func attack():
 func move():
 	movement_vector = DEFAULT_SPEED * input_vector
 	
-	# Is running really necessary ?
+	# TODO: Is running really necessary ?
 	#if Input.is_action_pressed("ui_shift"):
 	#	movement_vector *= RUN_SPEED
 	
