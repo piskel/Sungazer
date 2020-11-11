@@ -1,11 +1,11 @@
 extends KinematicBody2D
 
-const DEFAULT_SPEED = 300.0
+const DEFAULT_SPEED = 200.0
 #const DEFAULT_DASH_SPEED = 1.0
 const Y_AXIS_SPEED = 0.75
 const RUN_SPEED = 1.5
 
-const ATTACK_WIDTH = 100
+const ATTACK_WIDTH = 50
 
 # TODO: Should move this in the project settings
 const DASH_INPUT = "ui_right_click"
@@ -15,7 +15,6 @@ const ATTACK_INPUT = "ui_left_click"
 export (NodePath) var camera
 
 enum {
-	IDLE,
 	MOVING,
 	CHARGING,
 	DASHING,
@@ -57,6 +56,10 @@ func _ready():
 	hurtbox_dash_collision.polygon[2] = Vector2(0, ATTACK_WIDTH)
 	hurtbox_dash_collision.polygon[3] = Vector2(0, -ATTACK_WIDTH)
 	
+	# Sets the radius of the attack collision shape to the attack width
+	# TODO: Like with the hurtbox, skew the shape depending on the attack angle
+	hurtbox_attack_collision.shape.radius = ATTACK_WIDTH
+	
 	animation_tree.active = true;
 	
 	
@@ -67,6 +70,7 @@ func _physics_process(delta):
 	input_vector.y = Input.get_action_strength("ui_down")-Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
 	
+	# Sets the last_input_vector only if the input_vector is not (0, 0)
 	if input_vector != Vector2.ZERO:
 		last_input_vector = input_vector
 	
@@ -108,21 +112,21 @@ func _physics_process(delta):
 			move()
 			charge()
 				
-			
+			# Allows animations either if moving or idle while charging
 			if input_vector != Vector2.ZERO:
 				animation_state.travel("Run")
 				animation_tree.set("parameters/Run/blend_position", last_input_vector)
 			else:
 				animation_state.travel("Idle")
 				animation_tree.set("parameters/Idle/blend_position", dash_vector)
-			
-			
+
 			# Release dash
 			if Input.is_action_just_released(DASH_INPUT):
 				line2d.visible = false
 				
 				# Makes sure the player faces the direction of the dash vector
 				last_input_vector = dash_vector
+				dash_timer.start()
 				state = DASHING
 			
 			# Cancel charging with attack
@@ -131,13 +135,16 @@ func _physics_process(delta):
 				state = ATTACKING
 			
 		DASHING:
-			dash()
-			
 			# Cancel dash with attack
 			if Input.is_action_just_pressed(ATTACK_INPUT):
 				state = ATTACKING
 			
-			state = MOVING
+			if dash_timer.is_stopped():
+				if dash_timer.is_stopped():
+					state = MOVING
+			else:
+				dash()
+			
 		
 		ATTACKING:
 			attack()
@@ -157,10 +164,10 @@ func charge():
 
 func dash():
 	
-	# TODO: Maybe use a transition rather than instantly moving the player
-	#		on screen.
 	# Moves the player to the the new position
-	global_position += dash_vector
+	# TODO: Move that magic number somewhere
+	# TODO: Is there a cleaner way to do this ????
+	global_position += dash_vector/10
 	
 	
 	# Sets the hurtbox shape and position
@@ -170,21 +177,15 @@ func dash():
 	# Rotate the collision shape so it matches the player's trajectory
 	hurtbox_dash_collision.rotation = dash_vector.angle()
 	
-	hurtbox_dash_collision.disabled = false
-	hurtbox_dash_collision.visible = true
-	
-	hurtbox_attack_collision.disabled = false
-	hurtbox_attack_collision.visible = true
-	
-	dash_timer.start()
+	set_hurtbox_dash_collision(true)
+	set_hurtbox_attack_collision(true)
 	
 
 # TODO: Adding a cooldown !
 func attack():
 	# TODO: Maybe change the hurtbox shape. It doesn't really make sense for it
 	# to be a circle
-	hurtbox_attack_collision.disabled = false
-	hurtbox_attack_collision.visible = true
+	set_hurtbox_attack_collision(true)
 	attack_timer.start()
 	
 
@@ -200,18 +201,25 @@ func move():
 	
 	move_and_slide(movement_vector, Vector2.ZERO)
 
+# Sets the attack hurtbox collision
+func set_hurtbox_attack_collision(is_enabled:bool):
+	hurtbox_attack_collision.disabled = !is_enabled
+	hurtbox_attack_collision.visible = is_enabled # Debug
+
+# Sets the dash hurtbox collision
+func set_hurtbox_dash_collision(is_enabled:bool):
+	hurtbox_dash_collision.disabled = !is_enabled
+	hurtbox_dash_collision.visible = is_enabled # Debug
+
 
 # When the dash_timer is done, hurtbox_dash and hurtbox_attack are disabled
 func _on_DashTimer_timeout():
-	hurtbox_dash_collision.disabled = true
-	hurtbox_dash_collision.visible = false
+	set_hurtbox_dash_collision(false)
 	
 	if attack_timer.is_stopped():
-		hurtbox_attack_collision.disabled = true
-		hurtbox_attack_collision.visible = false
+		set_hurtbox_attack_collision(false)
 
 
 # When the attack_timer is done, hurtbox is disabled
 func _on_AttackTimer_timeout():
-	hurtbox_attack_collision.disabled = true
-	hurtbox_attack_collision.visible = false
+	set_hurtbox_attack_collision(false)
